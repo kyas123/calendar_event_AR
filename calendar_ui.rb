@@ -10,6 +10,7 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 def welcome
   system 'clear'
   puts "[1] > Go to event menu"
+  puts "[2] > go to view menu"
   puts "[E] > Exit"
 
   case (gets.chomp.upcase)
@@ -123,7 +124,6 @@ def edit_event
   puts "Press [2] to edit location"
   puts "Press [3] to edit start time"
   puts "Press [4] to edit end time"
-  binding.pry
   case gets.chomp
   when '1'
     puts "Please enter new description"
@@ -151,11 +151,67 @@ end
 def order_event
   results = Event.order('start_date ASC')
   results.all.each do |result|
-    puts result.description
-    puts result.start_date
+    if result.start_date > Time.now
+      puts result.description
+      puts result.start_date
+    end
   end
+    puts "Press any key to continue"
+    gets
+end
+
+def view_day
+  events = []
+  puts "Here are today's events."
+   Event.all.each do |result|
+    if result.start_date.day == Time.now.day &&
+      result.start_date.month == Time.now.month
+      puts result.description
+      events << result.description
+    end
+  end
+    if events == []
+      puts "You have no events today."
+    end
   puts "Press any key to continue"
   gets
 end
+
+def view_week
+  events = []
+  puts "Here are this week's events."
+   Event.all.each do |result|
+   if (result.start_date.day/7) == (Time.now.day/7) &&
+    result.start_date.month == Time.now.month
+    puts results.description
+    events << results.description
+    end
+  end
+  if events == []
+    puts "You have no events this week."
+end
+puts "Press any key to continue"
+gets
+end
+
+def view_month
+  events = []
+  puts "Here are the months events."
+  Event.all.each do |result|
+    if result.start_date.month == Time.now.month &&
+      results.start_date.year == Time.now.year
+      puts result.description
+      events << result.description
+    end
+  end
+    if events == []
+      puts "You have no events this month"
+    end
+  puts "Press any key to continue"
+  gets
+end
+
+
+
 
 welcome
